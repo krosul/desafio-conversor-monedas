@@ -14,7 +14,7 @@ import java.util.Currency;
 public class ClientAPI {
     private static String key = "4be3e6c274eb7d3e89b3ea26";
 
-    private static String urlApi = "https://v6.exchangerate-api.com/v6/" + key + "/latest/USD";
+    private static String urlApi = "https://v6.exchangerate-api.com/v6/" + key + "/latest/";
     public static Gson gson = new Gson();
 
 
@@ -28,7 +28,7 @@ public class ClientAPI {
                 .build();
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(urlApi))
+                .uri(URI.create(urlApi+currency))
                 .timeout(Duration.ofMinutes(2))
                 .header("Content-Type", "application/json")
                 .build();
@@ -40,9 +40,7 @@ public class ClientAPI {
         try {
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
             CurrencyModel resCurrency = gson.fromJson(response.body(), CurrencyModel.class);
-            System.out.println(resCurrency.conversion_rates.get("USD"));
             return resCurrency;
         } catch (Exception err) {
             System.out.println(err);
@@ -53,6 +51,7 @@ public class ClientAPI {
     }
 
     public CurrencyModel getCurrency(String currency) {
+
         CurrencyModel res = makeRequest(currency);
 //        System.out.println(res);
         return res;
